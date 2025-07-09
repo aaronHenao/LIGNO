@@ -1,6 +1,7 @@
 package com.produccion.backend.model;
 
 import com.produccion.backend.enums.EstadoTarea;
+import com.produccion.backend.enums.RolProduccion;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -27,6 +28,9 @@ public class Tarea {
 
     @Enumerated(EnumType.STRING)
     private EstadoTarea estado;
+
+    @Enumerated(EnumType.STRING)
+    private RolProduccion tipo; 
 
     private LocalDateTime fechaInicio;
     private LocalDateTime fechaFin;

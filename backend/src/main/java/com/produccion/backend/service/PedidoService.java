@@ -1,6 +1,8 @@
 package com.produccion.backend.service;
 
 import com.produccion.backend.dto.CrearPedidoRequest;
+import com.produccion.backend.dto.PedidoResumenDTO;
+import com.produccion.backend.dto.TareaResumenDTO;
 import com.produccion.backend.enums.EstadoPedido;
 import com.produccion.backend.enums.EstadoTarea;
 import com.produccion.backend.model.*;
@@ -8,6 +10,7 @@ import com.produccion.backend.repository.*;
 import com.produccion.backend.enums.RolProduccion;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import com.produccion.backend.model.Pedido;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -57,6 +60,20 @@ public class PedidoService {
         return pedido;
     }
 
+    public List<PedidoResumenDTO> obtenerResumenPedidos() {
+        List<Pedido> pedidos = pedidoRepo.findAll();
+
+        return pedidos.stream()
+            .map(pedido -> new PedidoResumenDTO(
+                pedido.getId(),
+                pedido.getEspecificacion(),
+                pedido.getTareas().stream()
+                    .map(t -> new TareaResumenDTO(t.getId(), t.getTipo(), t.getEstado()))
+                    .toList()
+            ))
+            .toList();
+    }
+
     private Usuario buscarTrabajadorConMenosCarga(Long empresaId, RolProduccion rol) {
         List<Usuario> candidatos = usuarioRepo.findByEmpresaIdAndRolProduccion(empresaId, rol);
         if (candidatos.isEmpty()) {
@@ -76,4 +93,5 @@ public class PedidoService {
             throw new RuntimeException("Etapa no reconocida: " + nombreEtapa);
         }
     }
+
 }

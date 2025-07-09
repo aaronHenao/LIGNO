@@ -37,4 +37,9 @@ public class Pedido {
         inverseJoinColumns = @JoinColumn(name = "etapa_id")
     )
     private List<EtapaProduccion> etapas;
+    
+
+    @OneToMany(mappedBy = "pedido", cascade= CascadeType.ALL, fetch= FetchType.LAZY)
+    private List<Tarea> tareas;
+
 }
